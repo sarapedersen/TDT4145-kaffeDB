@@ -1,0 +1,107 @@
+-- sletter eksisterende tabeller
+
+DROP TABLE IF EXISTS bruker;
+DROP TABLE IF EXISTS kaffesmaking;
+DROP TABLE IF EXISTS ferdigbrentKaffe;
+DROP TABLE IF EXISTS kaffeparti;
+DROP TABLE IF EXISTS foredlingsmetode;
+DROP TABLE IF EXISTS kaffegård;
+DROP TABLE IF EXISTS dyrker;
+DROP TABLE IF EXISTS kaffebønner;
+DROP TABLE IF EXISTS delAvParti;
+
+-- oppretter tabeller
+
+CREATE TABLE bruker (
+    epost VARCHAR(50) NOT NULL UNIQUE,
+    passord VARCHAR(30) NOT NULL,
+    fornavn VARCHAR(30),
+    etternavn VARCHAR(30),
+    CONSTRAINT bruker_pk PRIMARY KEY (epost) );
+
+CREATE TABLE kaffesmaking (
+    id INTEGER, 
+    notater TEXT,
+    antallPoeng INTEGER NOT NULL,
+    dato DATE, 
+    epost VARCHAR(50) NOT NULL,
+    kaffenavn VARCHAR(50) NOT NULL, 
+    kaffebrenneri VARCHAR(30) NOT NULL,
+    CONSTRAINT kaffesmaking_pk PRIMARY KEY (id), 
+    CONSTRAINT kaffesmaking_fk1 FOREIGN KEY (epost) REFERENCES bruker(epost)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+    CONSTRAINT kaffesmaking_fk2 FOREIGN KEY (kaffebrenneri) REFERENCES ferdigbrentKaffe(kaffebrenneri)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE, 
+    CONSTRAINT kaffesmaking_fk3 FOREIGN KEY (kaffenavn) REFERENCES ferdigbrentKaffe(navn)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL ); 
+
+CREATE TABLE ferdigbrentKaffe (
+    kaffebrenneri VARCHAR(30) NOT NULL, 
+    navn VARCHAR(50) NOT NULL, 
+    datoBrent DATE, 
+    beskrivelse TEXT, 
+    kilopris INTEGER NOT NULL, 
+    brenningsgrad VARCHAR(10) NOT NULL, 
+    partiId INTEGER, 
+    CONSTRAINT ferdigbrentKaffe_pk PRIMARY KEY (navn, kaffebrenneri), 
+    CONSTRAINT ferdigbrentKaffe_fk1 FOREIGN KEY (partiId) REFERENCES kaffeparti(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE );
+
+CREATE TABLE foredlingsmetode (
+    navn VARCHAR(30) NOT NULL UNIQUE, 
+    beskrivelse TEXT,
+    CONSTRAINT foredlingsmetode_pk PRIMARY KEY (navn) ); 
+
+CREATE TABLE kaffeparti (
+    id INTEGER, 
+    kilopris INTEGER NOT NULL, 
+    innhøstningsår CHAR(4),
+    gårdId INTEGER, 
+    foredlingsmetode VARCHAR(30), 
+    CONSTRAINT kaffeparti_pk PRIMARY KEY (id), 
+    CONSTRAINT kaffeparti_fk1 FOREIGN KEY (gårdId) REFERENCES kaffegård(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE, 
+    CONSTRAINT kaffeparti_fk2 FOREIGN KEY (foredlingsmetode) REFERENCES foredlingsmetode(navn)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL );
+
+
+CREATE TABLE kaffegård (
+    id INTEGER, 
+    navn VARCHAR(30),
+    moh INTEGER, 
+    land VARCHAR(30), 
+    region VARCHAR(30), 
+    CONSTRAINT kaffegård_pk PRIMARY KEY (id) ); 
+
+CREATE TABLE dyrker (
+    gårdId INTEGER, 
+    bønner VARCHAR(30), 
+    CONSTRAINT dyrker_pk PRIMARY KEY (gårdId, bønner), 
+    CONSTRAINT dyrker_fk1 FOREIGN KEY (gårdId) REFERENCES kaffegård(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE, 
+    CONSTRAINT dyrker_fk2 FOREIGN KEY (bønner) REFERENCES kaffebønner(navn)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE ); 
+
+CREATE TABLE kaffebønner (
+    navn VARCHAR(30), 
+    art VARCHAR(30), 
+    CONSTRAINT kaffebønner_pk PRIMARY KEY (navn) );
+
+CREATE TABLE delAvParti (
+    partiId INTEGER, 
+    bønner VARCHAR(30), 
+    CONSTRAINT delAvParti_pk PRIMARY KEY (partiId, bønner)
+    CONSTRAINT delAvParti_fk1 FOREIGN KEY (partiId) REFERENCES kaffeparti(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE, 
+    CONSTRAINT delAvParti_fk2 FOREIGN KEY (bønner) REFERENCES kaffebønner(navn)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE ); 
