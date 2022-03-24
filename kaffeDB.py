@@ -65,8 +65,10 @@ def brukerhistorie3():
 
 def brukerhistorie4():
     ord = input("Søk etter ord: ") 
-    cursor.execute("SELECT ks.kaffenavn, fbk.kaffebrenneri, fbk.beskrivelse, ks.notater FROM ferdigbrentkaffe AS fbk INNER JOIN kaffesmaking AS ks ON ks.kaffenavn = fbk.navn AND ks.kaffebrenneri = fbk.kaffebrenneri WHERE ks.notater LIKE '%{}%' OR fbk.beskrivelse LIKE '%{}%'".format(ord, ord))
-    print(cursor.fetchall())
+    kaffeliste = cursor.execute("SELECT DISTINCT ks.kaffenavn, fbk.kaffebrenneri FROM ferdigbrentkaffe AS fbk INNER JOIN kaffesmaking AS ks ON ks.kaffenavn = fbk.navn AND ks.kaffebrenneri = fbk.kaffebrenneri WHERE ks.notater LIKE '%{}%' OR fbk.beskrivelse LIKE '%{}%'".format(ord, ord))
+    for x in kaffeliste: 
+        print(x[0], x[1])
+
 
 def brukerhistorie5(): 
     print("test")
