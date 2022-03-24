@@ -16,8 +16,14 @@ cursor = con.cursor()
 # cursor.execute("INSERT INTO ferdigbrentKaffe VALUES ('Espressokaffe', 'Kaffehuset Friele', '22.12.2021', 'flott espressokaffe med god fylde', 201, 'mørk', 100)")
 # cursor.execute("INSERT INTO ferdigbrentKaffe VALUES ('Honduras El Campo', 'Jacobsen og Svart ', '02.01.2022', 'søt, fruktig kaffe med smak av moden fersken, røde druer og fiken', 716, 'lys', 100)")
 # cursor.execute("INSERT INTO ferdigbrentKaffe VALUES ('Brasil, Diamond Santos', 'Jacobsen og Svart ', '22.02.2022', 'søt, fruktig kaffe med smak av moden fersken, røde druer og fiken', 398, 'mørk', 100)")
+# cursor.execute("INSERT INTO ferdigbrentKaffe VALUES ('Svart kaffe', 'Jacobsen og Svart ', '02.01.2022', 'søt, fruktig kaffe med smak av moden fersken, røde druer og fiken', 716, 'lys', 102)")
+# cursor.execute("INSERT INTO ferdigbrentKaffe VALUES ('Ettermiddagskaffe', 'Jacobsen og Svart ', '02.01.2022', 'søt, fruktig kaffe med smak av moden fersken, røde druer og fiken', 716, 'lys', 103)")
 # cursor.execute("INSERT INTO kaffegård VALUES (1, 'Klæbugården', 500, 'Norge', 'Trondheim')")
+# cursor.execute("INSERT INTO kaffegård VALUES (2, 'Colombisk kaffegård', 500, 'Colombia', 'sted')")
+# cursor.execute("INSERT INTO kaffegård VALUES (3, 'Fra Rwanda', 500, 'Rwaanda', 'STed')")
 # cursor.execute("INSERT INTO kaffeparti VALUES (100, 550, 2021, 1, 'vasket')")
+# cursor.execute("INSERT INTO kaffeparti VALUES (102, 550, 2021, 2, 'tørket')")
+# cursor.execute("INSERT INTO kaffeparti VALUES (103, 550, 2021, 3, 'tørket')")
 # cursor.execute("INSERT INTO foredlingsmetode VALUES ('vasket', 'vasker bærene og sånt')")
 # cursor.execute("INSERT INTO kaffebønner VALUES ('Arabica', 'Coffea Arabica')")
 # cursor.execute("INSERT INTO kaffebønner VALUES ('Robusta', 'Coffea Robusta')")
@@ -69,9 +75,13 @@ def brukerhistorie4():
     for x in kaffeliste: 
         print(x[0], x[1])
 
-
+#AND kaffeparti.foredlingsmetode NOT LIKE 'Vasket'
 def brukerhistorie5(): 
-    print("test")
+    kaffeliste = cursor.execute("SELECT fbk.navn, fbk.kaffebrenneri, kaffegård.land, kaffeparti.foredlingsmetode FROM (ferdigbrentkaffe AS fbk INNER JOIN kaffeparti ON fbk.partiId = kaffeparti.id) INNER JOIN kaffegård ON kaffeparti.gårdId = kaffegård.id WHERE kaffegård.land LIKE 'Colombia' OR kaffegård.land LIKE 'Rwaanda' AND kaffeparti.foredlingsmetode NOT LIKE 'vasket'")
+    for x in kaffeliste: 
+        print(x[0], x[1])
+
+
 
 def loggIn(): 
     riktigInfo = False
@@ -133,6 +143,8 @@ def main():
             brukerhistorie2()
         if userInput == "4": 
             brukerhistorie4()
+        if userInput == "5": 
+            brukerhistorie5()
 
 main()
 
