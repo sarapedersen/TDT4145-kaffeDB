@@ -63,6 +63,14 @@ def brukerhistorie3():
     # for x in prisliste:
     print("hei")
 
+def brukerhistorie4():
+    ord = input("Søk etter ord: ") 
+    cursor.execute("SELECT ks.kaffenavn, fbk.kaffebrenneri, fbk.beskrivelse, ks.notater FROM ferdigbrentkaffe AS fbk INNER JOIN kaffesmaking AS ks ON ks.kaffenavn = fbk.navn AND ks.kaffebrenneri = fbk.kaffebrenneri WHERE ks.notater LIKE '%{}%' OR fbk.beskrivelse LIKE '%{}%'".format(ord, ord))
+    print(cursor.fetchall())
+
+def brukerhistorie5(): 
+    print("test")
+
 def loggIn(): 
     riktigInfo = False
     
@@ -82,8 +90,8 @@ def lagBruker():
     print("Du må lage bruker :D")
     epost = input("Epost: ")
     unik = False
-    brukerliste = cursor.execute("SELECT epost, passord FROM bruker")
     while unik == False:
+        brukerliste = cursor.execute("SELECT epost, passord FROM bruker")
         unik = True
         for x in brukerliste: 
             if epost == x[0]: 
@@ -107,11 +115,11 @@ def counter():
 
 def main(): 
     print("Velkommen til kaffeDB!") 
-    harBruker = input("Har du bruker? (j/n) ")
-    if harBruker == "j": 
-        bruker = loggIn()
-    else: 
-        bruker = lagBruker()
+    # harBruker = input("Har du bruker? (j/n) ")
+    # if harBruker == "j": 
+    #     bruker = loggIn()
+    # else: 
+    #     bruker = lagBruker()
     print("Du er nå logget inn")   
     userInput = "null"
     while userInput != "exit" :
@@ -121,6 +129,8 @@ def main():
             print(userInput)
         if userInput == "2": 
             brukerhistorie2()
+        if userInput == "4": 
+            brukerhistorie4()
 
 main()
 
