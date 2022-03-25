@@ -47,7 +47,7 @@ def brukerhistorie1():
     smaksnotat = input("Smaksnotat: ")
     #bruker = input("Bruker: ")
     poeng = int(poeng)
-    cursor.execute("INSERT INTO  kaffesmaking VALUES ({}, '{}', {}, '{}', '{}', '{}', '{}')".format(counter(), smaksnotat, poeng, dagensDato, bruker, kaffeliste[kaffeid][1], kaffeliste[kaffeid][0]))
+    cursor.execute("INSERT INTO kaffesmaking VALUES ({}, '{}', {}, '{}', '{}', '{}', '{}')".format(counter(), smaksnotat, poeng, dagensDato, bruker, kaffeliste[kaffeid][1], kaffeliste[kaffeid][0]))
 
 def brukerhistorie2():
     # En bruker skal kunne få skrevet ut en liste over hvilke brukere som har smakt flest unike kaffer så langt i år, sortert synkende
@@ -63,13 +63,10 @@ def brukerhistorie3():
     #   ifølge KaffeDBs brukere (høyeste gjennomsnittsscore kontra pris), sortert synkende.
     #   Listen skal inneholde brennerinavn, kaffenavn, pris og gjennomsnittsscore for hver kaffe
 
-
-    # Henter ut all info som trengs, men sliter med å få inn avg score her... Slå autmatisk sammen alt hvis man tar avg(antallPoeng) 
-    cursor.execute("SELECT fk.navn, fk.kilopris, fk.kaffebrenneri, antallPoeng FROM ferdigbrentKaffe as fk INNER JOIN kaffesmaking as ks ON ks.kaffenavn = fk.navn AND ks.kaffebrenneri = fk.kaffebrenneri")
+    cursor.execute("SELECT fk.navn, fk.kaffebrenneri, avg(ks.antallPoeng), fk.kilopris,  avg(ks.antallPoeng) / fk.kilopris AS score FROM ferdigbrentKaffe as fk INNER JOIN kaffesmaking as ks ON ks.kaffenavn = fk.navn AND ks.kaffebrenneri = fk.kaffebrenneri GROUP BY fk.navn, fk.kaffebrenneri ORDER BY score DESC")
     kaffeliste = cursor.fetchall()
     for x in kaffeliste:
-        # Prøvde på noe sånt for å få riktig avg score per kaffe.. men litt stuck der
-        cursor.execute("SELECT avg(antallPoeng) from kaffesmaking WHERE kaffenavn='{}' AND kaffebrenneri='{}'".format(x[0], x[2]))
+        print(x[0], "fra", x[1], "koster", x[3], "og har en gjennomsnittscore på", x[2])
 
 
 
@@ -129,11 +126,11 @@ def counter():
 
 def main():
     print("Velkommen til kaffeDB!")
-    # harBruker = input("Har du bruker? (j/n) ")
-    # if harBruker == "j":
-    #     bruker = loggIn()
-    # else:
-    #     bruker = lagBruker()
+    harBruker = input("Har du bruker? (j/n) ")
+    if harBruker == "j":
+        bruker = loggIn()
+    else:
+        bruker = lagBruker()
     print("Du er nå logget inn")
     userInput = "null"
     while userInput != "exit" :
