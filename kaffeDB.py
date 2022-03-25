@@ -77,7 +77,7 @@ def brukerhistorie4():
         print(x[0], x[1])
 
 def brukerhistorie5():
-    kaffeliste = cursor.execute("SELECT fbk.navn, fbk.kaffebrenneri, kaffegård.land, kaffeparti.foredlingsmetode FROM (ferdigbrentkaffe AS fbk INNER JOIN kaffeparti ON fbk.partiId = kaffeparti.id) INNER JOIN kaffegård ON kaffeparti.gårdId = kaffegård.id WHERE kaffegård.land LIKE 'Colombia' OR kaffegård.land LIKE 'Rwaanda' AND kaffeparti.foredlingsmetode NOT LIKE 'vasket'")
+    kaffeliste = cursor.execute("SELECT fbk.navn, fbk.kaffebrenneri, kaffegård.land, kaffeparti.foredlingsmetode FROM (ferdigbrentkaffe AS fbk INNER JOIN kaffeparti ON fbk.partiId = kaffeparti.id) INNER JOIN kaffegård ON kaffeparti.gårdId = kaffegård.id WHERE kaffegård.land LIKE 'Colombia' OR kaffegård.land LIKE 'Rwanda' AND kaffeparti.foredlingsmetode NOT LIKE 'vasket'")
     for x in kaffeliste:
         print(x[0], x[1])
 
